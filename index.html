@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Solusi Awal Transportasi (Final)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50; 
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #2c3e50;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        header {
+            background: #34495e; 
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 1.8rem;
+        }
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 1rem;
+        }
+        .section-header {
+            background-color: #34495e;
+            color: white;
+            padding: 1rem;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .input-section {
+            background: #465d74;
+            padding: 1rem;
+            border-radius: 6px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .input-control { 
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .input-control label { 
+            margin-right: 15px; 
+            font-weight: normal; 
+            min-width: 150px;
+        }
+        .input-control input[type="number"], .input-control select { 
+            padding: 8px; 
+            border: none; 
+            border-radius: 4px; 
+            text-align: center; 
+            width: 70px; 
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .matrix-input h3 {
+            color: #e67e22;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            border-bottom: 1px solid #5d758c;
+            padding-bottom: 5px;
+        }
+        .matrix-input .matrix-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .matrix-input .matrix-row input {
+            width: 50px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+        
+        .matrix-input label {
+            margin-right: 5px;
+        }
+
+        #solveButton {
+            background: #2ecc71;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem; 
+            margin-top: 1.5rem;
+            width: 100%;
+            transition: background 0.3s, transform 0.1s;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #27ae60; 
+            line-height: 1; 
+        }
+        #solveButton:hover {
+            background: #27ae60;
+        }
+        #solveButton:active {
+            transform: translateY(4px); 
+            box-shadow: 0 0 0 #27ae60;
+        }
+
+
+        
+        .output-section {
+            padding: 1rem 0;
+            color: #ecf0f1;
+        }
+        
+        
+        .solution-wrapper {
+            display: none; 
+        }
+
+        .solution-box {
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .solution-box h3 {
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 5px;
+        }
+        .solution-box table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .solution-box th, .solution-box td {
+            border: 1px solid #bdc3c7;
+            padding: 8px 5px;
+            text-align: center;
+            position: relative;
+        }
+        .solution-box th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        .solution-box td {
+            background: white;
+            color: #34495e;
+        }
+        .cost-label-inner {
+            font-size: 0.7em;
+            color: #7f8c8d;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .allocation {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e74c3c;
+            padding: 3px 0;
+        }
+
+        /* Rincian Perhitungan */
+        .perhitungan-rincian {
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            text-align: left;
+            font-size: 0.9em;
+            color: #34495e;
+        }
+        .perhitungan-rincian p { margin-bottom: 5px; }
+        .total-cost {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2ecc71;
+            margin-top: 10px;
+        }
+        .error { 
+            color: #e74c3c; 
+            margin-top: 10px;
+            font-weight: bold;
+            background: #fdfdfd;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Kalkulator Solusi Awal Transportasi</h1>
+            <p>Menampilkan alokasi, perkalian unit, penjumlahan subtotal, dan hasil akhir</p>
+        </header>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="section-header" style="border-radius: 4px;">Input Data Masalah</div>
+
+                <div class="input-control">
+                    <label for="numSources">Jumlah Pabrik (Sumber):</label>
+                    <select id="numSources" onchange="generateInputs()">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="input-control">
+                    <label for="numDestinations">Jumlah Kota (Tujuan):</label>
+                    <select id="numDestinations" onchange="generateInputs()">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="matrix-input">
+                    <h3>Matriks Biaya (Ribuan/ton)</h3>
+                    <div id="costMatrixInput"></div>
+                </div>
+                
+                <div class="matrix-input">
+                    <h3>Data Suplai (Produksi)</h3>
+                    <div id="supplyInput"></div>
+                </div>
+
+                <div class="matrix-input">
+                    <h3>Data Permintaan</h3>
+                    <div id="demandInput"></div>
+                </div>
+
+                <button id="solveButton" onclick="solveTransportation()">Hitung 3 Solusi Awal</button>
+                <div id="inputError" class="error" style="display:none;"></div>
+            </div>
+            
+            <div class="output-section">
+                <div id="resultsWrapper" class="solution-wrapper">
+                    <div class="section-header">Hasil dan Rincian Perhitungan</div>
+
+                    <div id="nwcSolution"></div>
+
+                    <div id="lcSolution"></div>
+
+                    <div id="vamSolution"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+ 
+        function getMatrixValue(id) {
+            const val = document.getElementById(id).value;
+            if (val === "" || isNaN(parseFloat(val))) throw new Error("Invalid Input");
+            return parseFloat(val);
+        }
+
+        function calculateTotalCostRinci(costs, allocation) {
+            let totalCost = 0;
+            let perkalianStr = [];
+            let subtotalStr = [];
+            for (let i = 0; i < costs.length; i++) {
+                for (let j = 0; j < costs[0].length; j++) {
+                    const qty = allocation[i][j];
+                    if (qty > 0) {
+                        const cost = costs[i][j];
+                        const subtotal = qty * cost;
+                        totalCost += subtotal;
+                        perkalianStr.push(`${qty}(${cost})`);
+                        subtotalStr.push(subtotal.toLocaleString('id-ID'));
+                    }
+                }
+            }
+            return { totalCost, perkalianStr, subtotalStr };
+        }
+        
+        function solveNWC(costs, supply, demand) {
+            let s = [...supply]; let d = [...demand]; const M = costs.length; const N = costs[0].length;
+            let allocation = Array(M).fill(0).map(() => Array(N).fill(0)); let i = 0; let j = 0;
+            while (i < M && j < N) {
+                const allocateQty = Math.min(s[i], d[j]);
+                allocation[i][j] = allocateQty; s[i] -= allocateQty; d[j] -= allocateQty;
+                if (s[i] === 0) i++; 
+                if (d[j] === 0) j++; 
+            }
+            return allocation;
+        }
+
+        function solveLC(costs, supply, demand) {
+            let s = [...supply]; let d = [...demand]; const M = costs.length; const N = costs[0].length;
+            let allocation = Array(M).fill(0).map(() => Array(N).fill(0));
+            let workingCosts = costs.map((row, i) => 
+                row.map((cost, j) => ({ cost, i, j }))
+            ).flat().sort((a, b) => a.cost - b.cost); 
+            for (const cell of workingCosts) {
+                const i = cell.i; const j = cell.j;
+                if (s[i] > 0 && d[j] > 0) {
+                    const allocateQty = Math.min(s[i], d[j]);
+                    allocation[i][j] = allocateQty; s[i] -= allocateQty; d[j] -= allocateQty;
+                }
+            }
+            return allocation;
+        }
+
+        function solveVAM(costs, supply, demand) {
+            let s = [...supply]; let d = [...demand]; const M = costs.length; const N = costs[0].length;
+            let allocation = Array(M).fill(0).map(() => Array(N).fill(0));
+            let workingCosts = costs.map(row => [...row]); 
+            let activeSources = new Set([...Array(M).keys()]);
+            let activeDestinations = new Set([...Array(N).keys()]);
+            while (activeSources.size > 0 && activeDestinations.size > 0) {
+                let penalties = [];
+                
+                for (let i of activeSources) {
+                    let rowCosts = [];
+                    for (let j of activeDestinations) { rowCosts.push(workingCosts[i][j]); }
+                    rowCosts.sort((a, b) => a - b);
+                    const penalty = rowCosts.length >= 2 ? rowCosts[1] - rowCosts[0] : rowCosts[0] || 0;
+                    penalties.push({ type: 'row', index: i, penalty });
+                }
+
+                for (let j of activeDestinations) {
+                    let colCosts = [];
+                    for (let i of activeSources) { colCosts.push(workingCosts[i][j]); }
+                    colCosts.sort((a, b) => a - b);
+                    const penalty = colCosts.length >= 2 ? colCosts[1] - colCosts[0] : colCosts[0] || 0;
+                    penalties.push({ type: 'col', index: j, penalty });
+                }
+                
+                if (penalties.length === 0) break;
+                penalties.sort((a, b) => b.penalty - a.penalty);
+                const maxPenalty = penalties[0];
+
+                let chosenRow = -1; let chosenCol = -1;
+                if (maxPenalty.type === 'row') {
+                    chosenRow = maxPenalty.index;
+                    let minCost = Infinity;
+                    for (let j of activeDestinations) {
+                        if (workingCosts[chosenRow][j] < minCost) { minCost = workingCosts[chosenRow][j]; chosenCol = j; }
+                    }
+                } else {
+                    chosenCol = maxPenalty.index;
+                    let minCost = Infinity;
+                    for (let i of activeSources) {
+                        if (workingCosts[i][chosenCol] < minCost) { minCost = workingCosts[i][chosenCol]; chosenRow = i; }
+                    }
+                }
+
+                if (chosenRow === -1 || chosenCol === -1) break;
+
+                const allocateQty = Math.min(s[chosenRow], d[chosenCol]);
+                allocation[chosenRow][chosenCol] = allocateQty;
+                s[chosenRow] -= allocateQty; d[chosenCol] -= allocateQty;
+
+                if (s[chosenRow] === 0) { activeSources.delete(chosenRow); }
+                if (d[chosenCol] === 0) { activeDestinations.delete(chosenCol); }
+            }
+            return allocation;
+        }
+        
+
+        function solveTransportation() {
+            const errorDiv = document.getElementById('inputError');
+            errorDiv.style.display = 'none';
+            
+            const numSources = parseInt(document.getElementById('numSources').value);
+            const numDestinations = parseInt(document.getElementById('numDestinations').value);
+            
+            const costs = []; const supply = []; const demand = [];
+
+            try {
+                for (let i = 0; i < numSources; i++) {
+                    costs[i] = [];
+                    for (let j = 0; j < numDestinations; j++) { costs[i][j] = getMatrixValue(`cost_${i}_${j}`); }
+                }
+                for (let i = 0; i < numSources; i++) { supply[i] = getMatrixValue(`supply_${i}`); }
+                for (let j = 0; j < numDestinations; j++) { demand[j] = getMatrixValue(`demand_${j}`); }
+            } catch (e) {
+                document.getElementById('resultsWrapper').style.display = 'none'; // Sembunyikan hasil jika ada error input
+                errorDiv.innerHTML = "Pastikan semua kolom input terisi dengan angka yang valid.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const totalSupply = supply.reduce((a, b) => a + b, 0);
+            const totalDemand = demand.reduce((a, b) => a + b, 0);
+
+            if (totalSupply !== totalDemand) {
+                document.getElementById('resultsWrapper').style.display = 'none'; // Sembunyikan hasil jika tidak seimbang
+                errorDiv.innerHTML = `Masalah TIDAK seimbang. Total Suplai (${totalSupply}) $\\neq$ Total Permintaan (${totalDemand}). Harap sesuaikan data.`;
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // 1. Jalankan Algoritma
+            const nwcAllocation = solveNWC(costs, supply, demand);
+            const lcAllocation = solveLC(costs, supply, demand);
+            const vamAllocation = solveVAM(costs, supply, demand);
+
+            const nwcResult = calculateTotalCostRinci(costs, nwcAllocation);
+            const lcResult = calculateTotalCostRinci(costs, lcAllocation);
+            const vamResult = calculateTotalCostRinci(costs, vamAllocation);
+
+            // 2. Render Hasil
+            renderSolution('nwcSolution', costs, nwcAllocation, nwcResult, "A. Metode NWC (Northwest Corner)", '#e74c3c');
+            renderSolution('lcSolution', costs, lcAllocation, lcResult, "B. Metode LC (Least Cost)", '#2ecc71');
+            renderSolution('vamSolution', costs, vamAllocation, vamResult, "C. Metode VAM (Vogel's Approximation Method)", '#e67e22');
+            
+            // 3. Tampilkan Bagian Hasil
+            document.getElementById('resultsWrapper').style.display = 'block';
+        }
+
+
+        // FUNGSI GENERASI INPUT (dengan data default)
+        function generateInputs() {
+            const numSources = parseInt(document.getElementById('numSources').value);
+            const numDestinations = parseInt(document.getElementById('numDestinations').value);
+            
+            // Data contoh soal dari materi
+            const defaultCosts = [[20, 5, 8], [15, 20, 10], [25, 10, 19]];
+            const defaultSupply = [90, 60, 50]; 
+            const defaultDemand = [50, 110, 40]; 
+            const cities = ["D1", "D2", "D3", "D4"];
+
+            let costHtml = '';
+            for (let i = 0; i < numSources; i++) {
+                costHtml += `<div class="matrix-row">Pabrik ${String.fromCharCode(65 + i)}: `;
+                for (let j = 0; j < numDestinations; j++) {
+                    let defaultValue = (defaultCosts[i] && defaultCosts[i][j]) ? defaultCosts[i][j] : '';
+                    costHtml += `<input type="number" id="cost_${i}_${j}" value="${defaultValue}" placeholder="D${j + 1}" required>`;
+                }
+                costHtml += '</div>';
+            }
+            document.getElementById('costMatrixInput').innerHTML = costHtml;
+
+            let supplyHtml = '<div>';
+            for (let i = 0; i < numSources; i++) {
+                let defaultValue = (defaultSupply[i]) ? defaultSupply[i] : '';
+                supplyHtml += `<label for="supply_${i}">S${i + 1}:</label><input type="number" id="supply_${i}" value="${defaultValue}" required>`;
+            }
+            supplyHtml += '</div>';
+            document.getElementById('supplyInput').innerHTML = supplyHtml;
+
+            let demandHtml = '<div>';
+            for (let j = 0; j < numDestinations; j++) {
+                let defaultValue = (defaultDemand[j]) ? defaultDemand[j] : '';
+                demandHtml += `<label for="demand_${j}">D${j + 1}:</label><input type="number" id="demand_${j}" value="${defaultValue}" required>`;
+            }
+            demandHtml += '</div>';
+            document.getElementById('demandInput').innerHTML = demandHtml;
+        }
+
+        // FUNGSI RENDERING (sama seperti sebelumnya)
+        function renderSolution(elementId, costs, allocation, result, title, color) {
+            const M = costs.length;
+            const N = costs[0].length;
+            const cities = ["D1", "D2", "D3", "D4"];
+            
+            let html = `<div class="solution-box" style="border-left: 5px solid ${color};">`; 
+            html += `<h3 style="color: ${color};">${title}</h3>`; 
+            
+            html += '<table><thead><tr><th>Pabrik</th>';
+            for (let j = 0; j < N; j++) {
+                html += `<th>${cities[j] || `D${j + 1}`}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            for (let i = 0; i < M; i++) {
+                html += `<tr><td>Pabrik ${String.fromCharCode(65 + i)}</td>`;
+                for (let j = 0; j < N; j++) {
+                    const cost = costs[i][j];
+                    const qty = allocation[i][j];
+                    const allocationDisplay = qty > 0 ? `<span class="allocation">${qty}</span>` : '0';
+                    html += `<td><span class="cost-label-inner">${cost}</span> ${allocationDisplay}</td>`;
+                }
+                html += `</tr>`;
+            }
+            html += '</tbody></table>';
+
+            html += '<div class="perhitungan-rincian">';
+            html += '<strong>Rincian Perhitungan Biaya:</strong>';
+            html += `<p>Biaya = ${result.perkalianStr.join(' + ')}</p>`;
+            html += `<p>= ${result.subtotalStr.join(' + ')}</p>`;
+            html += '</div>';
+
+            html += `<p class="total-cost" style="color: ${color}">Total Biaya: $\mathbf{${result.totalCost.toLocaleString('id-ID')}}$ Ribu (ton)</p></div>`;
+            document.getElementById(elementId).innerHTML = html;
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = generateInputs;
+    </script>
+</body>
+</html>
